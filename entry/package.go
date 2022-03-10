@@ -13,15 +13,6 @@ const (
 
 type ContentType string
 
-const (
-	FILE = ContentType("file")
-	JSON = ContentType("json")
-	HTML = ContentType("html")
-)
-
-
-
-
 type Package struct {
 	PType byte
 	Id    uint32
@@ -69,13 +60,9 @@ func (p *Package) Bytes(b *bytes.Buffer) {
 	}else{
 		p.DataBytes(b)
 	}
-
-
-
 }
-func HeaderUrlPackage(url string) *Package {
+func HeaderUrlPackage(url string,id uint32) *Package {
 	value := "url:" + url + "\n"
 	data := []byte(value)
-	id := math.RandInt()
-	return &Package{PType: HeaderType, Id: id, Total: uint32(len(data)), Len: uint32(len(data)), DATA: data}
+	return &Package{PType: HeaderType, Id: id, Total: 0, Len: uint32(len(data)), DATA: data}
 }

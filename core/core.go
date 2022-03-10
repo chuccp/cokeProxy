@@ -3,21 +3,14 @@ package core
 import "github.com/chuccp/cokeProxy/user"
 
 type Context struct {
-	storeMap *user.StoreMap
+	userManage *user.Manage
 }
 
 func NewContext() *Context {
-	return &Context{storeMap:user.NewStoreMap()}
+	return &Context{userManage:user.NewMange()}
 }
-func (ctx *Context) GetUser(name string) user.IUser {
-	ui,flag:=ctx.storeMap.Get(name)
-	if flag{
-		return ui
-	}
-	return nil
-}
-func (ctx *Context) AddUser(name string,user user.IUser)  {
-	ctx.storeMap.Add(name,user)
+func (ctx *Context) GetUserManage() *user.Manage {
+	return ctx.userManage
 }
 
 

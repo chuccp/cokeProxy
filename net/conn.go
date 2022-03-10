@@ -5,6 +5,7 @@ import (
 	"github.com/chuccp/cokeProxy/core"
 	"github.com/chuccp/cokeProxy/entry"
 	"github.com/chuccp/utils/io"
+	"github.com/chuccp/utils/log"
 	"github.com/chuccp/utils/math"
 	io2 "io"
 	"strings"
@@ -15,18 +16,24 @@ type conn struct {
 	stream    *io.NetStream
 	context *core.Context
 	outStream *sync.Map
+	name string
 }
 
 func (c *conn) Start() {
 	go c.read()
 }
+func (c *conn)  GetName()string{
+	return c.name
+}
 func (c *conn) read() {
 	for {
 		pack, err := c.readPackage()
+		log.Info("!!!!!",pack, err)
 		if err != nil {
 			break
 		}
 		if pack.GetType()==entry.LoginType{
+			log.Info("有连接来了")
 			var buff  bytes.Buffer
 			pack.Data(&buff)
 			reader:=io.NewReadStream(&buff)
@@ -35,32 +42,43 @@ func (c *conn) read() {
 				kv:=strings.Split(string(data),":")
 				if kv[0]=="name"{
 					name := kv[1]
-					c.context.AddUser(name,c)
+					c.name = name
+					c.context.GetUserManage().Add(name,c)
 				}
 			}
-			continue
 		}else{
 			v, ok := c.outStream.Load(pack.GetId())
+
+			log.Info("--------",v,ok)
+
 			if ok {
 				out := v.(*entry.Stream)
 				out.Write(pack)
 			}
 		}
 	}
+	c.context.GetUserManage().Remove(c.name)
+	log.Info("连接断开")
 }
 func (c *conn) Write(stream *entry.Stream) (*entry.Stream, error) {
 	for {
 		age, err := stream.Read()
+		log.Info("cocococo",age, err)
 		if err == nil {
-			var buffer bytes.Buffer
-			age.Bytes(&buffer)
-			c.stream.Write(buffer.Bytes())
+			var buffer  = new(bytes.Buffer)
+			age.Bytes(buffer)
+			data:=buffer.Bytes()
+			log.Info("~~~~",string(data))
+			c.stream.Write(data)
+			c.stream.Flush()
 		} else {
 			if err == io2.EOF {
-				st := entry.NewStream()
-				c.outStream.Store(st.Id, st)
+				log.Info("$$$$$$$$",age, err,stream.Id)
+				st := entry.NewStream(stream.Id)
+				c.outStream.Store(stream.Id, st)
 				return st, nil
 			} else {
+				log.Info("**********",age, err)
 				return nil, err
 			}
 		}
@@ -75,11 +93,12 @@ func (c *conn) readPackage() (*entry.Package, error) {
 	var pack = &entry.Package{}
 	if b == entry.LoginType{
 		pack.PType = entry.LoginType
-		data,err:=c.stream.ReadBytes(8)
+		data,err:=c.stream.ReadBytes(4)
 		if err != nil {
 			return nil, err
 		}
-		pack.Len = math.U32BE(data[4:8])
+		pack.Len = math.U32BE(data[0:4])
+		log.Info("len",pack.Len)
 		data, err = c.stream.ReadUintBytes(pack.Len)
 		if err != nil {
 			return nil, err
@@ -101,6 +120,7 @@ func (c *conn) readPackage() (*entry.Package, error) {
 			return nil, err
 		}
 		pack.DATA = data
+		log.Info("pack:",pack)
 		return pack, nil
 	} else {
 		pack.PType = entry.DataType
