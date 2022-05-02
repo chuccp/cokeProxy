@@ -33,6 +33,6 @@ func (m *Manage)Each(f func(IUser) bool){
 }
 
 type IUser interface {
-	 Write( *entry.Stream)(*entry.Stream,error)
+	 Write(pack *entry.Package)error
 	 GetName()string
 }

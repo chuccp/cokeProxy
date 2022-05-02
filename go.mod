@@ -3,7 +3,7 @@ module github.com/chuccp/cokeProxy
 go 1.17
 
 require (
-	github.com/chuccp/utils v0.0.0-20220310071726-772ac0c7cdc1
+	github.com/chuccp/utils v0.0.0-20220310110343-12ab1230b115
 	github.com/gin-gonic/gin v1.7.7
 )
 

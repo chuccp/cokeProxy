@@ -10,6 +10,10 @@ github.com/chuccp/utils v0.0.0-20220309160357-4491cc91af97 h1:OmHaZ0juHw8x++Z086
 github.com/chuccp/utils v0.0.0-20220309160357-4491cc91af97/go.mod h1:G+hiQEgRTWWKh9APHmIEwhTzxUdqm/JZ+D9tu7LbobM=
 github.com/chuccp/utils v0.0.0-20220310071726-772ac0c7cdc1 h1:xzWuPuTpawKEwQ+vJ6Qfq98R5mGZ8OSZJVFwW7Pp+Jg=
 github.com/chuccp/utils v0.0.0-20220310071726-772ac0c7cdc1/go.mod h1:G+hiQEgRTWWKh9APHmIEwhTzxUdqm/JZ+D9tu7LbobM=
+github.com/chuccp/utils v0.0.0-20220310104906-efdda3667ae0 h1:nQSng19L8VdYwtgKqS+uArd41QuSeT9wsWpJ0nac7Ok=
+github.com/chuccp/utils v0.0.0-20220310104906-efdda3667ae0/go.mod h1:G+hiQEgRTWWKh9APHmIEwhTzxUdqm/JZ+D9tu7LbobM=
+github.com/chuccp/utils v0.0.0-20220310110343-12ab1230b115 h1:wu0EjadeBjZerBFN83E/m99PFxsmrHYVXuI7wl+8nD8=
+github.com/chuccp/utils v0.0.0-20220310110343-12ab1230b115/go.mod h1:G+hiQEgRTWWKh9APHmIEwhTzxUdqm/JZ+D9tu7LbobM=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

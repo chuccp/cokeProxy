@@ -2,10 +2,10 @@ package web
 
 import (
 	"github.com/chuccp/cokeProxy/core"
-	"github.com/chuccp/cokeProxy/entry"
 	"github.com/chuccp/cokeProxy/user"
 	"github.com/chuccp/utils/log"
 	"github.com/gin-gonic/gin"
+	io2 "io"
 	"net/http"
 	"strconv"
 )
@@ -21,29 +21,52 @@ func NewServer(context *core.Context,port int)*Server  {
 
 func (s *Server) Start()  {
 	route := gin.Default()
-	//context:=core.NewContext()
-	//
-	//server:=net.NewServer(9080)
-	//go server.Start()
 	route.GET("/:name/*action", func(ctx *gin.Context) {
 		name:=ctx.Param("name")
 		action:=ctx.Param("action")
 		u, fa :=s.context.GetUserManage().Get(name)
-
-		log.Info("name:",name,"  action:",action)
-
+		log.Info("==================",ctx.Request.RemoteAddr,"   ","name:",name,"  action:",action)
 		if fa&&u!=nil{
-			steam,err:=u.Write(entry.NewUrlStream(action))
-			if err==nil{
-				web,err2:=entry.NewWebStream(steam)
-				if err2==nil{
-					ctx.DataFromReader(http.StatusOK, int64(web.Length),web.ContentType,web,nil)
-				}else{
-					ctx.HTML(http.StatusOK,"haha",err2.Error())
-				}
-
-			}
+			//urlStream:=entry.NewUrlStream(action,ctx.Request)
+			//steam,err:=u.Write(urlStream)
+			//if err==nil{
+			//	web,err2:=entry.NewWebStream(steam)
+			//	if err2==nil{
+			//		ctx.Header("Content-Length",strconv.FormatUint(uint64(web.Length),10))
+			//		ctx.Header("Content-Type",web.ContentType)
+			//		for k, v := range web.Head {
+			//			ctx.Header(k,v)
+			//		}
+			//		var buffer  = new(bytes.Buffer)
+			//		ctx.Stream(func(w io2.Writer) bool {
+			//			err4:=web.ReadBuffer(buffer)
+			//			if err4!=nil{
+			//				return false
+			//			}
+			//			_, err5 := w.Write(buffer.Bytes())
+			//			return err5==nil
+			//		})
+			//	}else{
+			//		ctx.HTML(http.StatusOK,"haha",err2.Error())
+			//	}
+			//
+			//}
 		}
+	})
+
+	route.GET("/test", func(ctx *gin.Context) {
+
+		num := 5
+		ctx.Stream(func(w io2.Writer) bool {
+
+			num--
+			if num==0{
+				return false
+			}
+			w.Write([]byte("=============="))
+
+			return true
+		})
 	})
 
 	route.GET("/user/list", func(ctx *gin.Context) {
